@@ -1,0 +1,26 @@
+name: Extraire le contenu du .rar
+
+on:
+  push:
+    paths:
+      - 'ameli off.rar'  # Déclenche l'action uniquement si le fichier .rar est modifié
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Vérifier le code
+      uses: actions/checkout@v4
+
+    - name: Installer unrar
+      run: sudo apt-get update && sudo apt-get install -y unrar
+
+    - name: Extraire le fichier .rar
+      run: unrar x 'ameli off.rar' 'ameli_off/'
+
+    - name: Ajouter les fichiers extraits
+      run: |
+        git add ameli_off/*
+        git commit -m "Ajout du contenu extrait de ameli off.rar"
+        git push
